@@ -34,7 +34,7 @@ public class HistoryPembelian {
         }
 
         if(i==0){
-            System.out.println("Belum Ada Pembelian Apapun");
+            System.out.println("Belum Ada Pembelian Apapun\n");
         }
     }
     public void tampilCatatanPembeli(String namaPembeli){
@@ -47,7 +47,7 @@ public class HistoryPembelian {
             }
         }
         if(i==0){
-            System.out.println("Anda Belum Melakukan Pembelian Apapun");
+            System.out.println("Anda Belum Melakukan Pembelian Apapun\n");
         }
     }
 }

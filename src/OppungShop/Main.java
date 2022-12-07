@@ -25,7 +25,7 @@ public class Main {
         Produk produk = new Produk();
         produk.daftar.add(new Produk("Mie Gomak", JenisProduk.Mie, 2000, 50));
         HistoryPembelian catatan = new HistoryPembelian();
-        Scanner input = new Scanner(System.in);
+        Scanner input = new Scanner(System.in).useDelimiter("\n");
         int pil;
             try {
                 awal:
@@ -50,9 +50,10 @@ public class Main {
                                 System.out.println("(1) Menu yang tersedia");
                                 System.out.println("(2) Tambah Menu");
                                 System.out.println("(3) Cari Menu");
-                                System.out.println("(4) Hapus Menu");
-                                System.out.println("(5) Lihat History Pembelian");
-                                System.out.println("(6) Logout");
+                                System.out.println("(4) Edit Menu");
+                                System.out.println("(5) Hapus Menu");
+                                System.out.println("(6) Lihat History Pembelian");
+                                System.out.println("(7) Logout");
                                 System.out.print("pilihan ");
                                 pil = input.nextInt();
                                 if (pil == 1) {
@@ -91,20 +92,67 @@ public class Main {
 
 
                                     produk.tambahProduk(namaProduk, jenis, harga, stok);
-                                    System.out.println("Produk Berhasil Ditambahkan");
+                                    System.out.println("Produk Berhasil Ditambahkan\n");
+                                    produk.lihatSemuaProduk();
                                 } else if (pil == 3) {
                                     System.out.print("Masukkan Nama Menu : ");
                                     input.nextLine();
                                     String namaProduk = input.nextLine();
                                     produk.cariNamaProduk(namaProduk);
                                 } else if (pil == 4) {
-                                    System.out.print("Masukkan Nama Menu : ");
-                                    input.nextLine();
-                                    String namaProduk = input.nextLine();
-                                    produk.hapusProduk(namaProduk);
+                                    produk.lihatSemuaProduk();
+                                    System.out.println("Pilih menu yang ingin di Edit: ");
+                                    int opsi = input.nextInt();
+                                    if (opsi > 0) {
+                                        System.out.println("Nama Menu yang baru: ");
+                                        String namaProduk = input.next();
+                                        JenisProduk jenis;
+                                        while (true) {
+                                            System.out.println("Pilih Jenis Menu Baru: ");
+                                            System.out.println("\n(1)Mie\n(2)Snack\n(3)Minuman\n(4)Nasi");
+                                            int pilJenis = input.nextInt();
+                                            if (pilJenis == 1) {
+                                                jenis = JenisProduk.Mie;
+                                                break;
+                                            } else if (pilJenis == 2) {
+                                                jenis = JenisProduk.Snack;
+                                                break;
+                                            } else if (pilJenis == 3) {
+                                                jenis = JenisProduk.Minuman;
+                                                break;
+                                            } else if (pilJenis == 4) {
+                                                jenis = JenisProduk.Nasi;
+                                                break;
+                                            } else {
+                                                System.out.println("Maaf Pilihan Tidak Ada Silahkan Memilih Kembali");
+
+                                            }
+                                        }
+
+                                        System.out.println("Nama Harga yang baru: ");
+                                        int harga = input.nextInt();
+                                        System.out.println("Nama Stok yang baru: ");
+                                        int stok = input.nextInt();
+
+                                        produk.editProduk(namaProduk, jenis, harga, stok, opsi - 1);
+                                        System.out.println("Produk Berhasil Diubah\n");
+                                    }else {
+                                        break ;
+                                    }
+                                    produk.lihatSemuaProduk();
                                 } else if (pil == 5) {
-                                    catatan.tampilSemuaCatatan();
+                                    produk.lihatSemuaProduk();
+                                    System.out.print("Masukkan No Menu yang ingin di hapus : ");
+                                    int opsi = input.nextInt();
+                                    if(opsi > 0) {
+                                        produk.hapusProduk(opsi-1);
+                                    }else{
+                                        break ;
+                                    }
+                                    produk.lihatSemuaProduk();
                                 } else if (pil == 6) {
+                                    catatan.tampilSemuaCatatan();
+                                } else if (pil == 7) {
                                     continue awal;
                                 }
                             }
@@ -144,43 +192,55 @@ public class Main {
                                     produk.cariNamaProduk(namaProduk);
 
                                 } else if (pil == 3) {
+                                    int p1 = 1;
+                                    int jumlah;
+                                    String namaProduk = null;
+                                    int jumlahProduk = 0;
                                     produk.lihatSemuaProduk();
-                                    System.out.print("Masukkan Nama Menu Yang Ingin Dibeli:  ");
-                                    String namaProduk = input.next();
-                                    System.out.print("Masukkan Jumlah Menu Yang Ingin Dibeli:  ");
-                                    int jumlahProduk = input.nextInt();
-                                    try {
-                                        Produk obs = produk.cariNamaProduk(namaProduk, 1);
-                                        if (obs.stok >= jumlahProduk) {
-                                            if (luser.saldo >= (jumlahProduk * obs.harga)) {
-                                                obs.stok = obs.stok - jumlahProduk;
-                                                luser.Beli(obs.harga, jumlahProduk);
-                                                catatan.catat(luser.namaPembeli, namaProduk, jumlahProduk, n);
-//                                            System.out.println("Metode Pengambilan barang: \n1. Ambil di tempat\n2. Antar\nPilihan: ");
-//                                            int pilih = input.nextInt();
-//                                            switch (pilih){
-//                                                case 1:
-//                                                    System.out.println("Oks kami menunggu mu");
-//                                                    break;
-//                                                case 2:
-//                                                    System.out.println("Masukkan Alamat Lengkap: ");
-//                                                    String inputAlamat = input.next();
-//                                                    System.out.println("Barang anda akan di kirim ke alamat "+inputAlamat+", silahkan sediakan uang sebesar "+jumlahProduk * obs.harga);
-//                                                    break;
-//                                            }
+                                    System.out.println("Masukkan Jumlah Menu yang akan Anda Beli :");
+                                    jumlah = Integer.valueOf(new Scanner(System.in).nextLine());
+                                    while(p1 <= jumlah) {
+                                        System.out.print("Masukkan Nama Menu " + p1 + " Yang Ingin Dibeli:  ");
+                                        namaProduk = input.next();
+                                        System.out.print("Masukkan Jumlah Menu " + p1 + " Yang Ingin Dibeli:  ");
+                                        jumlahProduk = input.nextInt();
+                                        p1++;
+                                    }
+
+                                        try {
+                                            Produk obs = produk.cariNamaProduk(namaProduk, 1);
+                                            if (obs.stok >= jumlahProduk) {
+                                                if (luser.saldo >= (jumlahProduk * obs.harga)) {
+                                                    obs.stok = obs.stok - jumlahProduk;
+                                                    luser.Beli(obs.harga, jumlahProduk);
+                                                    catatan.catat(luser.namaPembeli, namaProduk, jumlahProduk, n);
+                                                    int totalHarga = jumlahProduk * obs.harga;
+                                                    System.out.println("Total pembayaran = Rp "+ totalHarga +"");
+                                                    System.out.println("Metode Pengambilan barang: \n1. Ambil di tempat\n2. Antar\nPilihan: ");
+                                                    int pilih = input.nextInt();
+                                                    switch (pilih) {
+                                                        case 1:
+                                                            System.out.println("Oks kami menunggu mu");
+                                                            break;
+                                                        case 2:
+                                                            System.out.println("Masukkan Alamat Lengkap: ");
+                                                            String inputAlamat = input.next();
+                                                            System.out.println("Barang anda akan di kirim ke alamat " + inputAlamat + ", silahkan tunggu");
+                                                            break;
+                                                    }
+                                                } else {
+                                                    System.out.println("Saldo tidak Mencukupi");
+                                                }
+
                                             } else {
-                                                System.out.println("Saldo tidak Mencukupi");
+                                                System.out.println("Stok tidak Mencukupi");
                                             }
 
-                                        } else {
-                                            System.out.println("Stok tidak Mencukupi");
+                                        } catch (Exception e) {
+                                            System.out.println("Terjadi Kesalahan");
+                                        } finally {
+                                            System.out.println("\n");
                                         }
-
-                                    } catch (Exception e) {
-                                        System.out.println("Terjadi Kesalahan");
-                                    } finally {
-                                        System.out.println("\n");
-                                    }
 
                                 } else if (pil == 4) {
                                     System.out.print("Masukkan Jumlah Nominal : ");
